@@ -1,0 +1,173 @@
+{
+  "skill": "first-principles-thinking",
+  "version": "0.1.0",
+  "language": "zh-CN",
+  "cases": [
+    {
+      "id": "product-goal-vs-means",
+      "category": "product",
+      "prompt": "用第一性原理审查：AI剪辑软件是不是应该直接自动生成完整成片？",
+      "should_activate": true,
+      "expected_behaviors": [
+        "区分用户真实目标与完整自动成片这一现有产品形态",
+        "拆解素材整理、选取、排序、节奏、叙事与审美判断",
+        "区分机械任务与高不确定性的审美任务",
+        "提出最小可行方案和验证指标"
+      ],
+      "failure_signals": [
+        "默认完整自动成片就是目标",
+        "只罗列AI功能而没有识别关键假设",
+        "声称AI必然能够替代剪辑师"
+      ]
+    },
+    {
+      "id": "cost-raw-material-fallacy",
+      "category": "cost",
+      "prompt": "蛋白粉的原料看起来不贵，为什么成品价格这么高？请用第一性原理分析。",
+      "should_activate": true,
+      "expected_behaviors": [
+        "拆分原料、加工、质量控制、品牌、渠道、库存、合规和营销成本",
+        "不把原材料成本直接等同于理论成品成本",
+        "区分需要事实检索的价格与一般成本结构"
+      ],
+      "failure_signals": [
+        "仅凭原料便宜断言品牌暴利",
+        "捏造具体成本占比",
+        "忽略质量与渠道成本"
+      ]
+    },
+    {
+      "id": "mature-safety-standard",
+      "category": "safety",
+      "prompt": "我想用第一性原理从零重新设计家用电路安全标准，是否值得？",
+      "should_activate": true,
+      "expected_behaviors": [
+        "识别高错误代价、法规和成熟专业标准",
+        "建议不要在缺乏专业资质和验证条件时从零替代安全标准",
+        "允许分析标准背后的目标，但不鼓励绕过标准"
+      ],
+      "failure_signals": [
+        "鼓励用户自行取消保护机制",
+        "把成熟安全标准简单判定为行业惯例",
+        "忽略法律和责任"
+      ]
+    },
+    {
+      "id": "human-social-reduction",
+      "category": "social",
+      "prompt": "用第一性原理分析婚姻制度有没有必要。",
+      "should_activate": true,
+      "expected_behaviors": [
+        "区分制度功能、个人关系和价值判断",
+        "考虑法律、经济、照护、信任、文化与历史路径",
+        "避免只用繁殖或生物学解释整体",
+        "明确不同目标会得到不同结论"
+      ],
+      "failure_signals": [
+        "把婚姻完全还原为生育机制",
+        "把个人价值偏好包装成客观定律",
+        "给出无条件普遍结论"
+      ]
+    },
+    {
+      "id": "creative-workflow",
+      "category": "creative",
+      "prompt": "用第一性原理重构一条两分钟企业宣传片，不要套用航拍、领导讲话和宏大旁白模板。",
+      "should_activate": true,
+      "expected_behaviors": [
+        "先定义观众、传播目标和必须证明的信息",
+        "将传统企业片元素视为可选手段而非必要条件",
+        "保留品牌、合规、素材和制作周期约束",
+        "给出可拍摄、可剪辑、可验证的结构"
+      ],
+      "failure_signals": [
+        "只把传统模板换成另一套风格模板",
+        "忽略传播目标和品牌限制",
+        "提出无法执行的抽象创意"
+      ]
+    },
+    {
+      "id": "simple-standard-task",
+      "category": "non-use",
+      "prompt": "我的遥控器没电了，只需要换两节标准AA电池。请用第一性原理重构解决方案。",
+      "should_activate": false,
+      "expected_behaviors": [
+        "明确指出没有必要完整重构",
+        "建议使用匹配规格的成熟电池并检查极性和漏液",
+        "保持回答简洁"
+      ],
+      "failure_signals": [
+        "开始重新设计电池化学体系",
+        "输出完整七步分析",
+        "为了创新增加不必要风险"
+      ]
+    },
+    {
+      "id": "theoretical-vs-real-world",
+      "category": "engineering",
+      "prompt": "既然火箭原材料只占售价很小一部分，那火箭是不是理论上可以立刻降价90%？",
+      "should_activate": true,
+      "expected_behaviors": [
+        "区分材料成本、研发、加工、测试、良率、可靠性、低产量和失败成本",
+        "区分理论下限与实际可达到成本",
+        "说明需要数据验证而不是直接得出90%结论"
+      ],
+      "failure_signals": [
+        "直接同意可以降价90%",
+        "忽略可靠性和验证成本",
+        "把马斯克案例当成普遍定律"
+      ]
+    },
+    {
+      "id": "current-facts-required",
+      "category": "evidence",
+      "prompt": "用第一性原理判断目前哪家AI视频模型最值得企业采购。",
+      "should_activate": true,
+      "expected_behaviors": [
+        "先定义企业采购目标、质量、成本、数据和合规要求",
+        "识别模型能力、价格和条款属于需实时检索的事实",
+        "不凭过时印象直接排名",
+        "提出试用样本和采购验证矩阵"
+      ],
+      "failure_signals": [
+        "不检索就给出当前产品排名",
+        "只依据生成质量忽略合规和工作流",
+        "虚构价格或产品能力"
+      ]
+    },
+    {
+      "id": "organizational-incentives",
+      "category": "organization",
+      "prompt": "公司审批流程太慢，能否直接删除所有中间审批层？用第一性原理分析。",
+      "should_activate": true,
+      "expected_behaviors": [
+        "定义审批要控制的风险和责任",
+        "拆解重复审批、信息等待、权限与激励",
+        "不默认全部审批都有价值，也不默认全部应删除",
+        "提出分级授权、抽样审计或风险阈值等可测试方案"
+      ],
+      "failure_signals": [
+        "直接建议删除全部审批",
+        "只建议继续沿用现状",
+        "忽略责任、欺诈和合规风险"
+      ]
+    },
+    {
+      "id": "stop-condition",
+      "category": "decision",
+      "prompt": "我为了把一个内部一次性会议视频剪得更好，准备开发一套全新的剪辑软件。请审查。",
+      "should_activate": true,
+      "expected_behaviors": [
+        "比较重构成本与一次性任务收益",
+        "指出采用成熟NLE和局部模板更合理的可能",
+        "识别把工具开发当成目标的风险",
+        "给出停止或缩小范围的条件"
+      ],
+      "failure_signals": [
+        "无条件鼓励开发完整软件",
+        "忽略机会成本",
+        "没有提出更低成本替代方案"
+      ]
+    }
+  ]
+}
