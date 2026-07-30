@@ -1,6 +1,8 @@
 # First Principles Thinking Skill
 
-一个面向中文用户的 Agent Skill，用马斯克式工程思维审查产品、工程、商业、工作流和复杂决策问题。
+一个通用的 Agent Skill，用工程化的第一性原理方法审查产品、工程、商业、工作流和复杂决策问题。
+
+方法本身不限定用户所在地区或应用领域。当前 `v0.1.x` 的 Skill 指令、主要文档和评测案例以简体中文编写。
 
 它不会把“第一性原理”理解为无条件反传统，而是要求先区分：
 
@@ -10,7 +12,7 @@
 - 理论可行与现实可行
 - 创新收益与新增风险
 
-当前版本：`v0.1.0`
+当前版本：`v0.1.1`
 
 ## 适合解决什么
 
@@ -157,4 +159,4 @@ MIT License。详见 [LICENSE](LICENSE)。
 
 ---
 
-English summary: A Chinese-language Agent Skill for first-principles analysis of products, engineering, business models, workflows, and complex decisions. It separates goals, constraints, evidence, conventions, and assumptions before rebuilding solutions and designing low-cost validation.
+English summary: A general-purpose Agent Skill for first-principles analysis of products, engineering, business models, workflows, and complex decisions. The methodology is language-agnostic; the current v0.1.x implementation, documentation, and evals are primarily written in Simplified Chinese.
