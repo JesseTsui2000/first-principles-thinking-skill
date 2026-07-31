@@ -12,7 +12,7 @@
 - 理论可行与现实可行
 - 创新收益与新增风险
 
-当前版本：`v0.1.1`
+当前版本：`v0.1.2`
 
 ## 适合解决什么
 
@@ -118,7 +118,15 @@ skills/first-principles-thinking/
 - `MINOR`：增加兼容能力或分析维度；
 - `MAJOR`：改变核心流程或产生明显不兼容行为。
 
-正式版本以 Git tag 和 GitHub Release 为准。每次修改前，优先把真实失败案例加入 `evals/evals.json`，再修改 Skill 并运行回归检查。
+GitHub `main` 是唯一公开、稳定、可安装的内容源。tag 和对应的 GitHub Release 是不可变的发布记录。
+
+Copy 安装是独立副本，不会自动跟随仓库变化。禁止直接修改 `~/.agents/skills/first-principles-thinking`；新版本发布后应主动更新：
+
+```bash
+npx skills update first-principles-thinking -g
+```
+
+涉及 Skill 行为、触发范围或输出契约时，应先将真实失败案例加入 eval。纯文档、工具或发布流程维护应记录对应问题，并完成适当的静态或负向验证。详细维护与发布政策见 [PUBLISHING.md](PUBLISHING.md)。
 
 ## 本地验证
 

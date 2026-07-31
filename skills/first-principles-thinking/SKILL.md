@@ -4,7 +4,7 @@ description: 用第一性原理审查产品、工程、商业、工作流和复�
 license: MIT
 metadata:
   author: Jesse Tsui
-  version: "0.1.1"
+  version: "0.1.2"
   language: zh-CN
 ---
 

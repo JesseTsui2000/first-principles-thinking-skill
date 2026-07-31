@@ -1,35 +1,67 @@
 # Release Checklist
 
-## 内容
+## A. 发布 PR 前
 
-- [ ] 新增或更新了对应失败案例的 eval
-- [ ] `SKILL.md` 没有不必要的重复
-- [ ] description 仍明确说明“做什么”和“何时使用”
-- [ ] 没有把个人判断包装成事实
-- [ ] 没有删除安全、法律、专业知识和现实可行性边界
-- [ ] 默认输出仍可根据问题复杂度压缩
+- [ ] 当前位于正确的短生命周期工作分支，未直接向 `main` 开发
+- [ ] 已记录对应 Issue、问题或维护缺口
+- [ ] 已判断是否影响 Skill 行为、触发范围或输出契约
 
-## 版本
+### 若影响 Skill 行为
 
-- [ ] `VERSION` 已更新
-- [ ] `SKILL.md` 的 `metadata.version` 与 `VERSION` 一致
-- [ ] `CHANGELOG.md` 已更新
-- [ ] 已判断是 PATCH、MINOR 还是 MAJOR
+- [ ] 已记录可复现的真实失败案例
+- [ ] 行为变更所需 eval 已增加或更新
+- [ ] 已使用最新稳定版复现并记录行为和失败
+- [ ] 已使用相同输入完成稳定版与候选版行为对比
 
-## 测试
+### 若不影响 Skill 行为
 
+- [ ] eval ID 和行为对比已标为 `N/A`，并说明原因
+- [ ] 已完成适当的静态验证、负向测试或文档审查
+
+### 通用检查
+
+- [ ] 已检查候选版没有意外改变 Skill 核心行为
+- [ ] 已判断 PATCH、MINOR 或 MAJOR
+- [ ] `VERSION`、`SKILL.md` 的 `metadata.version`、`evals.json` 的 `version` 一致
+- [ ] README 当前版本与 `VERSION` 一致
+- [ ] `CHANGELOG.md` 包含当前版本条目
 - [ ] `python3 tools/validate_repo.py` 通过
-- [ ] 旧版与新版已使用相同 eval 对比
-- [ ] 至少检查一个“应该触发”案例
-- [ ] 至少检查一个“不应该强行触发”案例
-- [ ] 至少检查一个高风险或专业边界案例
-- [ ] 至少检查一个人类或社会问题案例
+- [ ] `git diff --check` 通过
+- [ ] 发布 PR 的 GitHub Actions 已通过
 
-## GitHub
+## B. 合并和发版
 
-- [ ] main 分支已 push
-- [ ] GitHub Actions 通过
-- [ ] 创建了不可复用的新 tag
-- [ ] 创建了 GitHub Release
+- [ ] 发布 PR 已合并到 `main`
+- [ ] 合并后 `main` 的 GitHub Actions 已通过
+- [ ] 本地 `main`、`origin/main`、`HEAD` 指向同一发布 commit
+- [ ] 已创建新的 annotated tag
+- [ ] tag 指向发布后的 `main` commit
+- [ ] 已推送 tag
+- [ ] GitHub Release 对应同一 tag
 - [ ] Release notes 与 Changelog 一致
-- [ ] 从公开仓库重新安装测试成功
+- [ ] 未移动、覆盖、复用或删除任何旧 tag
+
+## C. 发布后
+
+- [ ] 已测试公开仓库能够识别 `first-principles-thinking`
+- [ ] 已执行 `npx skills update first-principles-thinking -g`
+- [ ] 已检查 `~/.agents/skills/first-principles-thinking` 中的版本
+- [ ] 已检查仓库与安装副本的内容哈希
+- [ ] 已显式读取并确认安装版本
+
+### Skill 核心行为发生变化
+
+- [ ] 已在 Codex App 完成显式调用测试
+- [ ] 已在 Codex App 完成隐式触发测试
+- [ ] 已在 Codex App 完成简单任务边界测试
+
+### 纯维护改动
+
+- [ ] 已完成公开识别、安装版本和显式读取的最小复验
+- [ ] 隐式触发和简单任务边界已执行，或已标记为 `N/A` 并说明原因
+
+### 收尾
+
+- [ ] 已检查工作区干净
+- [ ] 已删除本地和远程工作分支
+- [ ] 已确认 `main` 不含待发布内容
