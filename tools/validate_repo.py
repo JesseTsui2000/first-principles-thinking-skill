@@ -12,17 +12,21 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILL_NAME = "first-principles-thinking"
 SKILL_FILE = ROOT / "skills" / SKILL_NAME / "SKILL.md"
 EVAL_FILE = ROOT / "skills" / SKILL_NAME / "evals" / "evals.json"
+EVAL_README_FILE = ROOT / "skills" / SKILL_NAME / "evals" / "README.md"
 VERSION_FILE = ROOT / "VERSION"
+README_FILE = ROOT / "README.md"
+CHANGELOG_FILE = ROOT / "CHANGELOG.md"
 
 REQUIRED_FILES = [
-    ROOT / "README.md",
+    README_FILE,
     ROOT / "LICENSE",
-    ROOT / "CHANGELOG.md",
+    CHANGELOG_FILE,
     ROOT / "CONTRIBUTING.md",
     ROOT / "PUBLISHING.md",
     ROOT / "RELEASE_CHECKLIST.md",
     SKILL_FILE,
     EVAL_FILE,
+    EVAL_README_FILE,
     VERSION_FILE,
 ]
 
@@ -80,6 +84,14 @@ def main() -> None:
     version = VERSION_FILE.read_text(encoding="utf-8").strip()
     if not re.fullmatch(r"\d+\.\d+\.\d+", version):
         fail("VERSION must use MAJOR.MINOR.PATCH")
+
+    readme_text = README_FILE.read_text(encoding="utf-8")
+    if f"当前版本：`v{version}`" not in readme_text:
+        fail(f"README.md must declare current version v{version}")
+
+    changelog_text = CHANGELOG_FILE.read_text(encoding="utf-8")
+    if not re.search(rf"^## \[{re.escape(version)}\](?:\s|$)", changelog_text, re.MULTILINE):
+        fail(f"CHANGELOG.md must contain a ## [{version}] entry")
 
     skill_text = SKILL_FILE.read_text(encoding="utf-8")
     fm = parse_frontmatter(skill_text)
@@ -140,6 +152,9 @@ def main() -> None:
             fail(f"eval {case_id} needs expected behaviors and failure signals")
 
     print(f"PASS: {SKILL_NAME} v{version}")
+    print("PASS: README.md current version matches VERSION")
+    print(f"PASS: CHANGELOG.md contains [{version}]")
+    print("PASS: evals/README.md exists")
     print(f"PASS: {len(cases)} eval cases")
     print(f"PASS: SKILL.md has {line_count} lines")
     print("PASS: repository validation completed")

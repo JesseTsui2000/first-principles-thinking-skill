@@ -14,6 +14,17 @@
 
 ### Removed
 
+## [0.1.2] - 2026-07-31
+
+### Changed
+
+- 重写维护与发布工作流。
+- 明确 `main`、tag、GitHub Release 的关系。
+- 增加 Copy 安装更新和 Codex App 发布后验证。
+- 加强 release checklist 和 PR 模板。
+- 增加 README、Changelog 和 eval README 的 validator 检查。
+- 区分 Skill 行为变更与非行为维护变更的验证要求。
+
 ## [0.1.1] - 2026-07-30
 
 ### Changed
