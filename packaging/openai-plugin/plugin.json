@@ -10,10 +10,10 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "First Principles Thinking",
-    "shortDescription": "Structured first-principles analysis for complex decisions.",
+    "shortDescription": "First-principles analysis",
     "longDescription": "Analyze complex products, engineering decisions, business models, workflows, constraints, assumptions, and validation strategies using the bundled first-principles-thinking Skill.",
     "developerName": "Jesse Tsui",
-    "category": "productivity",
+    "category": "Productivity",
     "capabilities": [
       "First-principles analysis",
       "Constraint and assumption classification",

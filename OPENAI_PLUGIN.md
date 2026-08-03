@@ -48,9 +48,9 @@ python3 tools/build_openai_plugin.py --check
 - Skills-only Portal submission 使用 ZIP，ZIP 必须包含 supported Plugin manifest 和至少一个 bundled Skill。
 - ZIP 可以直接以 Plugin root 为 archive root；也可以使用唯一一个顶层 Plugin 目录，但该目录不得有 sibling files。
 - 当前 generated directory 是未来 ZIP 的 Plugin root；当前不生成 ZIP，也不引入 dist branch、独立发行仓库、npm package 或 archive 自动化。
-- ZIP 自动生成推迟到真实 publisher/listing 字段补齐后的 Portal preflight 阶段。
+- ZIP 自动生成推迟到 directory branding assets 和 Portal metadata 完成后的 preflight 阶段。
 
-当前 manifest 缺少用户待确认的 publisher/listing 字段。本地 package 可以验证为有效，但不得声明为 Portal-ready；不得添加身份、URL、logo 或 listing 占位符绕过该状态。
+Directory submission readiness 当前为 `NOT ASSESSED`。`interface.logo`、`interface.composerIcon`、可选的 interface listing URLs、verified publisher identity 和 Portal attestations 均推迟到 Portal submission 阶段；本轮不添加占位资产、URL 或身份资料，也不把本地 package 描述为 directory-ready。
 
 ## 多制品版本
 
@@ -70,27 +70,20 @@ Repo-local marketplace 文件是：
 
 目标 entry 使用 `source.path: "./.build/plugins/first-principles-thinking"`。路径相对 marketplace root，不能包含 `..`、不能指向仓库根，并必须与固定 build output 一致。fresh clone 后应先运行 builder；generated package 不受版本控制，禁止人工编辑。
 
-当前只验证 marketplace 的路径和文件系统解析。ChatGPT/Codex 是否能发现该 repo-local marketplace、旧 Plugin 卸载、从 generated root 重装及新 cache 审计均留到 Phase 3，不能将本阶段结果描述为桌面端发现成功。
+repo-local marketplace 的路径与文件系统解析已经验证。generated Plugin 已完成本地安装，安装后的 cache 已通过精确两文件审计；本轮不重装 Plugin，也不修改 Plugin cache。
 
-## 本地测试计划
+## 已完成验证
 
-1. 运行 repository validator、clean build 和 package `--check`。
-2. 确认 manifest 只引用 package 内 `skills/`，不包含 MCP、App 或 screenshot 配置。
-3. 连续两次 clean build，比较文件清单、每个文件 SHA 和逐字节内容。
-4. 确认核心 `SKILL.md` 和 `evals.json` 无 diff，核心 SHA-256 不变。
-5. Phase 3 经单独授权后，从 generated root 重装并使用 `plugin-submission/test-cases.json` 做 Plugin-only 行为回归；不得直接修改用户级 Skill copy。
+- canonical manifest、deterministic builder、repository validation 和 generated package validation；
+- `plugin-creator` ingestion validation；
+- 本地 Plugin installation 与 exact two-file cache audit；
+- positive activation、simple-task non-activation 和 privacy audit。
+
+本轮 metadata 修复只运行一次 clean build，再运行 repository validator、package `--check` 和 generated Plugin ingestion validation；不重跑完整行为回归。
 
 ### plugin-creator preflight 状态
 
-官方 `plugin-creator` helper 是推荐的脚手架和 preflight 路径之一，但当前环境运行 helper 时因 Python 环境没有 PyYAML 而失败，尚未通过：
-
-```text
-ModuleNotFoundError: No module named 'yaml'
-```
-
-Packaging Phase 2 遵守约束，不安装 PyYAML、不修改系统 Python，也不运行该 helper。PyYAML 不会成为项目依赖。后续 helper 只允许针对最终生成 package 运行，不得用它重写 canonical source；正式 Portal submission 前，应在单独授权的隔离环境中补跑 helper，或使用届时官方提供的等效 validator。
-
-`.build` source.path 的文件系统解析已经验证；category 和完整 ingestion 仍必须由后续 Plugin Directory 实测确认，不能将当前静态验证视为已经完成安装验证。
+当前本机 `plugin-creator` validator 已针对最终 generated package 通过 ingestion validation。该验证不改写 canonical source、不安装新依赖，也不把 generated package 提升为 directory-ready 状态。
 
 ## Submission golden set
 
@@ -98,7 +91,14 @@ Packaging Phase 2 遵守约束，不安装 PyYAML、不修改系统 Python，也
 
 ## 后续阶段
 
-Publisher identity、logo、website、support、privacy、terms、category 和 availability 均属于后续阶段。本地 wrapper 不添加这些字段的占位符，也不推断尚未确认的信息。
+尚未完成的 directory submission 工作包括：
+
+- directory branding assets：`interface.logo` 和 `interface.composerIcon`；
+- Portal metadata、verified publisher identity 和 attestations；
+- 可选的 interface listing URLs；
+- submission ZIP、Portal upload、final scans 和 public directory publication。
+
+本地 wrapper 不添加这些项目的占位符，也不推断尚未确认的信息。
 
 每次公开提交或更新应记录以下映射：
 

@@ -62,9 +62,9 @@ Plugin-only release：`N/A — Core Skill version unchanged.`
 - [ ] 未修改用户级 Plugin/Skill 配置
 - [ ] Plugin Directory 人工安装若不属于当前阶段，已明确留待后续验证
 - [ ] Skills-only Portal ZIP 结构包含 manifest 和至少一个 bundled Skill；唯一顶层目录模式下没有 sibling files
-- [ ] 当前 manifest 的真实 publisher/listing 字段未补齐时，package 明确标记为 Portal `NOT READY`
+- [ ] Directory submission readiness 报告为 `NOT ASSESSED`，directory assets 和 Portal metadata 留到 submission 阶段评估
 - [ ] ZIP 自动生成留到 Portal preflight，未把当前 generated directory 误称为可直接提交的 ZIP
-- [ ] `plugin-creator` helper 仅针对最终生成 package 运行，且不会把 PyYAML 加入项目或系统 Python
+- [ ] `plugin-creator` validator 仅针对最终生成 package 运行，且不会安装项目依赖或修改系统 Python
 
 ## B. 合并和发版
 

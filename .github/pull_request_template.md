@@ -66,5 +66,5 @@ Plugin-only 变更说明（不适用可填 `N/A`）：
 - [ ] 若涉及 Plugin，已确认 wrapper 未复制或修改核心 Skill
 - [ ] 若涉及 Plugin，submission golden set 和本地路径验证已通过
 - [ ] 若涉及 packaging，clean build 和 `--check` 已通过，且未人工编辑 `.build`
-- [ ] 若涉及 Portal，已验证 ZIP root 结构，并在真实 publisher/listing 字段不完整时标记 `NOT READY`
+- [ ] 若涉及 directory submission，已验证 ZIP root 结构，并将未评估的 directory assets / Portal metadata 标记为 `NOT ASSESSED`
 - [ ] GitHub Actions 已通过，或 PR 创建后等待 CI

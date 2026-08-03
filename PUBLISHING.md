@@ -19,7 +19,7 @@
 - Core Skill 发生变化时，必须评估 Plugin wrapper 是否需要新版本，以及是否需要重新执行本地打包和平台测试。
 - 平台 wrapper 只引用核心 Skill，不能复制核心指令，也不能成为触发契约、分析流程或输出结构的新事实源。
 
-当前本地包装关系是 Plugin `0.1.0` bundles Core Skill `0.1.2`。Portal identity、logo、公开网站、支持和法律页面、category、availability 以及正式提交属于后续独立阶段。
+当前本地包装关系是 Plugin `0.1.0` bundles Core Skill `0.1.2`。Directory branding assets、可选的 interface listing URLs、Portal metadata、publisher verification、availability 以及正式提交属于后续独立阶段。
 
 ## Plugin packaging 边界
 
@@ -36,7 +36,7 @@ python3 tools/build_openai_plugin.py --check
 
 Repo-local marketplace 指向完整 generated Plugin root；fresh clone 后必须先运行 build。仓库根 compatibility manifest 必须保持不存在。
 
-Skills-only Portal submission 使用 ZIP。ZIP 必须包含 supported Plugin manifest 和至少一个 bundled Skill；Plugin root 可以直接位于 archive root，或位于唯一顶层目录且不得有 sibling files。当前 generated directory 是未来 ZIP 的 Plugin root，但本阶段不生成 ZIP。真实 publisher/listing 字段补齐前 package 不是 Portal-ready，ZIP 自动生成推迟到 Portal preflight。
+Skills-only Portal submission 使用 ZIP。ZIP 必须包含 supported Plugin manifest 和至少一个 bundled Skill；Plugin root 可以直接位于 archive root，或位于唯一顶层目录且不得有 sibling files。当前 generated directory 是未来 ZIP 的 Plugin root，但本阶段不生成 ZIP。Directory submission readiness 为 `NOT ASSESSED`；branding assets 和 Portal metadata 推迟到 Portal preflight，skills-only interface listing URLs 为可选。
 
 ## Core Skill Copy 安装
 
@@ -180,7 +180,7 @@ git push origin --delete "$BRANCH_NAME"
 
 不得把 submission golden set 写回核心 eval，不得直接修改用户级 Plugin/Skill 安装，不得人工编辑 `.build`。本地 marketplace 的桌面端安装验证、Portal submission/revision ID 和 Published URL 只有在对应后续阶段实际产生后才能记录。
 
-`plugin-creator` helper 只用于验证最终生成 package，不得改写 canonical manifest 或 Core Skill。它所需的 PyYAML 不加入项目或系统 Python；需要时只能在单独授权的隔离环境中提供。
+`plugin-creator` validator 只用于验证最终生成 package，不得改写 canonical manifest 或 Core Skill，也不得为此安装项目依赖或修改系统 Python。
 
 ## 失败停止条件
 

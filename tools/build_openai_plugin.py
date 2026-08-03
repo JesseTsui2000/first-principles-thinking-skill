@@ -21,7 +21,7 @@ EXPECTED_SKILL_SHA256 = (
     "2aa3d0c8ac0093ac5e40e281c8eb3807541733b56c0d394c3a3d017ef9f3c395"
 )
 STRICT_THREE_PART_VERSION_RE = re.compile(r"\d+\.\d+\.\d+")
-ALLOWED_PLUGIN_CATEGORIES = {"productivity"}
+ALLOWED_PLUGIN_CATEGORIES = {"Productivity"}
 
 SKILL_FILE = ROOT / "skills" / SKILL_NAME / "SKILL.md"
 MANIFEST_FILE = ROOT / "packaging" / "openai-plugin" / "plugin.json"
@@ -51,16 +51,6 @@ PROHIBITED_CONFIG_KEYS = {
     "screenshot",
     "screenshots",
 }
-PORTAL_READY_KEYS = {"portalready", "portalreadiness", "portalstatus"}
-PORTAL_REQUIRED_FIELDS = (
-    "author.name",
-    "interface.developerName",
-    "publisherUrl",
-    "supportUrl",
-    "privacyUrl",
-    "termsUrl",
-    "logo",
-)
 
 
 class BuildError(RuntimeError):
@@ -76,7 +66,6 @@ class SourceState:
     skill_sha256: str
     manifest_sha256: str
     manifest: dict[str, object]
-    portal_missing_fields: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -147,18 +136,28 @@ def find_nested_key(data: object, prohibited: set[str]) -> str | None:
     return None
 
 
-def nested_value(data: dict[str, object], dotted_path: str) -> object | None:
-    value: object = data
-    for component in dotted_path.split("."):
-        if not isinstance(value, dict) or component not in value:
-            return None
-        value = value[component]
+def require_interface_text(
+    interface: dict[str, object],
+    field: str,
+    max_characters: int,
+    *,
+    single_line: bool,
+) -> str:
+    value = interface.get(field)
+    if not isinstance(value, str) or not value.strip():
+        raise BuildError(f"manifest interface.{field} must be a non-empty string")
+    if single_line and re.search(r"[\r\n\u2028\u2029]", value):
+        raise BuildError(f"manifest interface.{field} must be a single line")
+    if len(value) > max_characters:
+        raise BuildError(
+            f"manifest interface.{field} must be at most {max_characters} characters"
+        )
     return value
 
 
 def validate_manifest(
     manifest: dict[str, object], plugin_version: str, package_root: Path
-) -> tuple[str, ...]:
+) -> None:
     if manifest.get("name") != SKILL_NAME:
         raise BuildError(f"manifest name must be {SKILL_NAME}")
     if manifest.get("version") != plugin_version:
@@ -174,22 +173,32 @@ def validate_manifest(
     interface = manifest.get("interface")
     if not isinstance(interface, dict):
         raise BuildError("manifest interface must be an object")
-    developer_name = interface.get("developerName")
-    if not isinstance(developer_name, str) or not developer_name.strip():
-        raise BuildError("manifest interface.developerName must be a non-empty string")
+    require_interface_text(interface, "displayName", 30, single_line=True)
+    require_interface_text(interface, "shortDescription", 30, single_line=True)
+    require_interface_text(interface, "longDescription", 4000, single_line=False)
+    require_interface_text(interface, "developerName", 80, single_line=True)
     category = interface.get("category")
     if category not in ALLOWED_PLUGIN_CATEGORIES:
         allowed = ", ".join(sorted(ALLOWED_PLUGIN_CATEGORIES))
         raise BuildError(f"manifest interface.category must be one of: {allowed}")
     capabilities = interface.get("capabilities")
-    if (
-        not isinstance(capabilities, list)
-        or not capabilities
-        or not all(isinstance(value, str) and value.strip() for value in capabilities)
-    ):
+    if not isinstance(capabilities, list) or not capabilities:
         raise BuildError(
             "manifest interface.capabilities must be a non-empty array of non-empty strings"
         )
+    if len(capabilities) > 20:
+        raise BuildError("manifest interface.capabilities must contain at most 20 items")
+    for capability in capabilities:
+        if not isinstance(capability, str) or not capability.strip():
+            raise BuildError(
+                "manifest interface.capabilities must be a non-empty array of non-empty strings"
+            )
+        if re.search(r"[\r\n\u2028\u2029]", capability):
+            raise BuildError("manifest interface.capabilities items must be single-line")
+        if len(capability) > 120:
+            raise BuildError(
+                "manifest interface.capabilities items must be at most 120 characters"
+            )
 
     skills_path = manifest.get("skills")
     if skills_path != "./skills/":
@@ -209,17 +218,6 @@ def validate_manifest(
     prohibited = find_nested_key(manifest, PROHIBITED_CONFIG_KEYS)
     if prohibited is not None:
         raise BuildError(f"manifest contains prohibited MCP/App/screenshot key: {prohibited}")
-
-    for key, value in manifest.items():
-        if normalized_key(key) in PORTAL_READY_KEYS and value not in (False, None, "NOT READY"):
-            raise BuildError("manifest must not mark the current package as Portal-ready")
-
-    return tuple(
-        field
-        for field in PORTAL_REQUIRED_FIELDS
-        if not isinstance(nested_value(manifest, field), str)
-        or not str(nested_value(manifest, field)).strip()
-    )
 
 
 def parse_skill_version(skill_bytes: bytes) -> str:
@@ -266,7 +264,7 @@ def validate_sources() -> SourceState:
         )
 
     manifest = require_json_object(manifest_bytes, "canonical manifest")
-    portal_missing_fields = validate_manifest(manifest, plugin_version, OUTPUT_ROOT)
+    validate_manifest(manifest, plugin_version, OUTPUT_ROOT)
 
     eval_bytes = require_fixed_regular_file(
         ROOT / "skills" / SKILL_NAME / "evals" / "evals.json", "Core evals"
@@ -289,7 +287,6 @@ def validate_sources() -> SourceState:
         skill_sha256=skill_sha256,
         manifest_sha256=sha256_bytes(manifest_bytes),
         manifest=manifest,
-        portal_missing_fields=portal_missing_fields,
     )
 
 
@@ -400,11 +397,7 @@ def validate_package(
         raise BuildError("generated manifest SHA-256 does not match canonical manifest")
 
     package_manifest = require_json_object(package_manifest_bytes, "generated manifest")
-    package_missing_fields = validate_manifest(
-        package_manifest, sources.plugin_version, package_root
-    )
-    if package_missing_fields != sources.portal_missing_fields:
-        raise BuildError("generated manifest Portal-readiness state differs from canonical source")
+    validate_manifest(package_manifest, sources.plugin_version, package_root)
 
     return PackageState(
         skill_sha256=package_skill_sha256,
@@ -444,7 +437,10 @@ def print_summary(sources: SourceState, package: PackageState) -> None:
     print(f"Package manifest SHA-256: {package.manifest_sha256}")
     print(f"Package root: {OUTPUT_ROOT}")
     print(f"Package file allowlist: {', '.join(package.files)}")
-    print("Portal-ready manifest: NOT READY (informational)")
+    print("Directory submission readiness: NOT ASSESSED")
+    print(
+        "Directory assets and Portal metadata are deferred to the Portal submission stage."
+    )
 
 
 def build_package() -> tuple[SourceState, PackageState]:

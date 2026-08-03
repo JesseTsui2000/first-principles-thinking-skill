@@ -98,9 +98,11 @@ python3 tools/build_openai_plugin.py --check
 
 固定输出位于 `.build/plugins/first-principles-thinking/`，只包含 manifest 和 canonical Skill 的 ignored copy。`.build` 不得人工编辑或提交，生成的 `SKILL.md` 也不是第二份事实源。仓库根不再包含 compatibility manifest。
 
-本地 marketplace 位于 `.agents/plugins/marketplace.json`，其 `source.path` 指向上述 generated Plugin root；fresh clone 后必须先运行 build。此处只验证文件系统目标，ChatGPT/Codex 的实际发现、卸载和重装仍留待 Phase 3。
+本地 marketplace 位于 `.agents/plugins/marketplace.json`，其 `source.path` 指向上述 generated Plugin root；fresh clone 后必须先运行 build。generated Plugin 已完成本地安装，并通过 exact two-file cache audit；本轮不重装 Plugin，也不修改 Plugin cache。
 
-Skills-only Portal 提交使用 ZIP；ZIP 必须包含 supported Plugin manifest 和至少一个 bundled Skill。Plugin root 可以直接位于 archive root，或位于唯一顶层目录且不得有 sibling files。当前生成目录是未来 ZIP 的 Plugin root，但现阶段不生成 ZIP；manifest 仍缺用户待确认的 publisher/listing 字段，因此当前 package 不是 Portal-ready。详细边界见 [OPENAI_PLUGIN.md](OPENAI_PLUGIN.md)。
+Skills-only Portal 提交使用 ZIP；ZIP 必须包含 supported Plugin manifest 和至少一个 bundled Skill。Plugin root 可以直接位于 archive root，或位于唯一顶层目录且不得有 sibling files。当前生成目录是未来 ZIP 的 Plugin root，但现阶段不生成 ZIP。Directory submission readiness 为 `NOT ASSESSED`：`interface.logo`、`interface.composerIcon`、Portal metadata、publisher verification、submission ZIP、upload/final scans 和 public directory publication 均尚未完成；skills-only package 的 interface listing URLs 为可选。详细边界见 [OPENAI_PLUGIN.md](OPENAI_PLUGIN.md)。
+
+现有包装已经完成 canonical manifest、deterministic builder、repository/package validation、`plugin-creator` ingestion validation、本地安装、exact two-file cache audit、positive activation、simple-task non-activation 和 privacy audit。
 
 ## 使用方式
 
@@ -190,7 +192,7 @@ python3 tools/build_openai_plugin.py --check
 - eval JSON 是否有效；
 - 必要维护文件是否存在。
 
-Validator 分别报告 repository、local generated package 和 Portal readiness。fresh clone 在尚未 build 时 repository validation 可以通过；build 后必须同时通过 package `--check`。当前 Portal readiness 只报告 `NOT READY`，不会伪造缺失字段。
+Validator 分别报告 repository 和 local generated package 状态。fresh clone 在尚未 build 时 repository validation 可以通过；build 后必须同时通过 package `--check`。Directory submission readiness 固定报告 `NOT ASSESSED`，directory assets 和 Portal metadata 留到 Portal submission 阶段评估。
 
 GitHub Actions 会在 fresh checkout 中运行 source validation、两次 clean build、package `--check`、文件清单/SHA/逐字节可重现性比较，并确认构建未改变 tracked source 或 Git status。
 

@@ -298,7 +298,7 @@ def repository_skill_files() -> list[str]:
     return sorted(skill_files)
 
 
-def validate_plugin(version: str) -> tuple[str, int, int, bool, tuple[str, ...]]:
+def validate_plugin(version: str) -> tuple[str, int, int, bool]:
     try:
         source_state = plugin_builder.validate_sources()
         plugin_builder.validate_output_location()
@@ -309,6 +309,25 @@ def validate_plugin(version: str) -> tuple[str, int, int, bool, tuple[str, ...]]
         fail("PLUGIN_VERSION must use MAJOR.MINOR.PATCH")
     if source_state.core_version != version:
         fail("builder source validation Core Skill version must match VERSION")
+
+    lowercase_category_manifest = dict(source_state.manifest)
+    interface = lowercase_category_manifest.get("interface")
+    if not isinstance(interface, dict):
+        fail("canonical manifest interface must be an object")
+    lowercase_category_interface = dict(interface)
+    lowercase_category_interface["category"] = "productivity"
+    lowercase_category_manifest["interface"] = lowercase_category_interface
+    try:
+        plugin_builder.validate_manifest(
+            lowercase_category_manifest,
+            source_state.plugin_version,
+            GENERATED_PACKAGE_ROOT,
+        )
+    except plugin_builder.BuildError:
+        pass
+    else:
+        fail("manifest interface.category must reject lowercase productivity")
+
     if path_exists(ROOT_PLUGIN_MANIFEST_FILE):
         fail("root .codex-plugin/plugin.json must not exist after Packaging Phase 2")
 
@@ -416,7 +435,6 @@ def validate_plugin(version: str) -> tuple[str, int, int, bool, tuple[str, ...]]
         positive_count,
         negative_count,
         package_valid,
-        source_state.portal_missing_fields,
     )
 
 
@@ -500,7 +518,6 @@ def main() -> None:
         positive_count,
         negative_count,
         package_valid,
-        portal_missing_fields,
     ) = validate_plugin(version)
     skill_sha256 = hashlib.sha256(SKILL_FILE.read_bytes()).hexdigest()
 
@@ -514,6 +531,7 @@ def main() -> None:
     print(f"PASS: SKILL.md has {line_count} lines")
     print(f"PASS: {positive_count} positive and {negative_count} negative submission tests")
     print("PASS: canonical plugin manifest and repo-local marketplace validated")
+    print("PASS: lowercase category productivity is rejected")
     print("PASS: root compatibility manifest is absent")
     print("PASS: .build is ignored and contains no tracked files")
     print("PASS: canonical SKILL.md is the only SKILL.md in the repository")
@@ -523,9 +541,9 @@ def main() -> None:
         print("Local package valid: PASS")
     else:
         print("Local package valid: NOT BUILT (run tools/build_openai_plugin.py)")
+    print("Directory submission readiness: NOT ASSESSED")
     print(
-        "Portal-ready manifest: NOT READY (informational; missing real publisher/listing "
-        f"fields: {', '.join(portal_missing_fields)})"
+        "Directory assets and Portal metadata are deferred to the Portal submission stage."
     )
     print("PASS: repository validation completed")
 

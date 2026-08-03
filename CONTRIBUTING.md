@@ -52,7 +52,7 @@ OpenAI Plugin wrapper、repo-local marketplace 和 submission golden set 属于�
 
 Plugin packaging 的受版本控制事实源包括 canonical Core Skill、`packaging/openai-plugin/plugin.json`、两个版本文件和 submission golden set。`.build/plugins/first-principles-thinking/` 是 ignored generated output，不允许人工编辑或提交；其中的 `SKILL.md` 只能由构建流程从 canonical Skill 复制，并必须通过 byte 和 SHA 对比。
 
-Skills-only Portal submission 使用包含 supported Plugin manifest 和至少一个 bundled Skill 的 ZIP。当前 generated directory 是未来 ZIP 的 Plugin root，不是已生成的 ZIP；只有补齐真实 publisher/listing 字段并通过 Portal preflight 后才能生成提交包。不得添加身份、URL、logo 或 listing 占位符来伪造 Portal readiness。
+Skills-only Portal submission 使用包含 supported Plugin manifest 和至少一个 bundled Skill 的 ZIP。当前 generated directory 是未来 ZIP 的 Plugin root，不是已生成的 ZIP；directory branding assets 和 Portal metadata 完成并通过 preflight 后才能生成提交包。Skills-only interface listing URLs 为可选；不得添加身份、URL、logo 或 listing 占位符来伪造 directory readiness。
 
 ## 修改原则
 
