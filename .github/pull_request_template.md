@@ -9,8 +9,14 @@
 
 ## 发布信息
 
-- 基线版本：
-- 目标版本：
+- Release type：
+  - [ ] Core Skill release
+  - [ ] Plugin-only release
+  - [ ] Combined release
+- Core Skill 基线版本：
+- Core Skill 目标版本：
+- Plugin wrapper 基线版本（不适用可填 `N/A`）：
+- Plugin wrapper 目标版本（不适用可填 `N/A`）：
 - 对应 Issue、失败案例或维护问题：
 - eval ID（可填 `N/A`，并说明原因）：
 - [ ] 准备作为发布 PR 合并
@@ -37,11 +43,15 @@
 
 ## 版本建议
 
+Plugin-only release 的 Core version 判断填写：`N/A — Core Skill version unchanged.`
+
 - [ ] PATCH：文档、validator、eval 修正，或恢复已承诺行为且不扩大触发/输出契约
 - [ ] MINOR：增加向后兼容的分析能力、新维度或明显扩大但兼容的触发/输出能力
 - [ ] MAJOR：改变核心七步流程、分类体系、默认行为契约或产生不兼容触发/输出
 
 版本判断依据：
+
+Plugin-only 变更说明（不适用可填 `N/A`）：
 
 
 ## 检查
@@ -51,4 +61,10 @@
 - [ ] 已运行 `python3 tools/validate_repo.py`
 - [ ] 已检查 `CHANGELOG.md` 包含目标版本
 - [ ] 已确认版本文件和 README 当前版本一致
+- [ ] 若涉及 Plugin，已确认 `PLUGIN_VERSION` 与 manifest 一致
+- [ ] 若涉及 Plugin，已确认 canonical manifest source，且仓库根 compatibility manifest 不存在
+- [ ] 若涉及 Plugin，已确认 wrapper 未复制或修改核心 Skill
+- [ ] 若涉及 Plugin，submission golden set 和本地路径验证已通过
+- [ ] 若涉及 packaging，clean build 和 `--check` 已通过，且未人工编辑 `.build`
+- [ ] 若涉及 Portal，已验证 ZIP root 结构，并在真实 publisher/listing 字段不完整时标记 `NOT READY`
 - [ ] GitHub Actions 已通过，或 PR 创建后等待 CI

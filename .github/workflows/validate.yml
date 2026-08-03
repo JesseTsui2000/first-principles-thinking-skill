@@ -22,3 +22,59 @@ jobs:
 
       - name: Validate repository
         run: python3 tools/validate_repo.py
+
+      - name: Build and check clean Plugin package
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_root=".build/plugins/first-principles-thinking"
+          snapshot_root="$RUNNER_TEMP/first-principles-thinking-package"
+
+          python3 tools/build_openai_plugin.py
+          python3 tools/build_openai_plugin.py --check
+
+          mkdir -p "$snapshot_root"
+          cp -R "$package_root"/. "$snapshot_root"/
+          (
+            cd "$package_root"
+            find . -print | sort
+          ) > "$RUNNER_TEMP/package-first.files"
+          (
+            cd "$package_root"
+            find . -type f -print0 | sort -z | xargs -0 sha256sum
+          ) > "$RUNNER_TEMP/package-first.sha256"
+
+      - name: Rebuild and compare Plugin package
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_root=".build/plugins/first-principles-thinking"
+          snapshot_root="$RUNNER_TEMP/first-principles-thinking-package"
+
+          python3 tools/build_openai_plugin.py
+          python3 tools/build_openai_plugin.py --check
+          diff -r --no-dereference "$snapshot_root" "$package_root"
+
+          (
+            cd "$package_root"
+            find . -print | sort
+          ) > "$RUNNER_TEMP/package-second.files"
+          (
+            cd "$package_root"
+            find . -type f -print0 | sort -z | xargs -0 sha256sum
+          ) > "$RUNNER_TEMP/package-second.sha256"
+          cmp "$RUNNER_TEMP/package-first.files" "$RUNNER_TEMP/package-second.files"
+          cmp "$RUNNER_TEMP/package-first.sha256" "$RUNNER_TEMP/package-second.sha256"
+
+          python3 tools/validate_repo.py
+
+      - name: Verify build leaves the checkout clean
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --exit-code
+          git diff --cached --exit-code
+          test -z "$(git status --short)"
+          test -z "$(git ls-files -- .build)"
+          git check-ignore -q --no-index .build/plugins/first-principles-thinking

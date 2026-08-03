@@ -1,0 +1,20 @@
+{
+  "name": "first-principles-thinking-local",
+  "interface": {
+    "displayName": "First Principles Thinking Local"
+  },
+  "plugins": [
+    {
+      "name": "first-principles-thinking",
+      "source": {
+        "source": "local",
+        "path": "./.build/plugins/first-principles-thinking"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
