@@ -28,6 +28,15 @@
 
 ```text
 first-principles-thinking-skill/
+├── .agents/
+│   └── plugins/
+│       └── marketplace.json
+├── .build/                          # ignored generated output
+│   └── plugins/
+│       └── first-principles-thinking/
+├── packaging/
+│   └── openai-plugin/
+│       └── plugin.json              # canonical Plugin manifest source
 ├── skills/
 │   └── first-principles-thinking/
 │       ├── SKILL.md
@@ -35,7 +44,10 @@ first-principles-thinking-skill/
 │           ├── README.md
 │           └── evals.json
 ├── tools/
+│   ├── build_openai_plugin.py
 │   └── validate_repo.py
+├── plugin-submission/
+│   └── test-cases.json
 ├── .github/
 │   ├── ISSUE_TEMPLATE/
 │   ├── workflows/
@@ -44,6 +56,8 @@ first-principles-thinking-skill/
 ├── CONTRIBUTING.md
 ├── LICENSE
 ├── PUBLISHING.md
+├── OPENAI_PLUGIN.md
+├── PLUGIN_VERSION
 ├── RELEASE_CHECKLIST.md
 ├── VERSION
 └── README.md
@@ -70,6 +84,25 @@ skills/first-principles-thinking/
 ```
 
 到目标 Agent 支持的 Skills 目录。
+
+### OpenAI Plugin 本地包装
+
+Plugin wrapper 的 canonical manifest source 是 `packaging/openai-plugin/plugin.json`；核心 Skill 的 canonical source 仍是 `skills/first-principles-thinking/SKILL.md`。两者与 `VERSION`、`PLUGIN_VERSION`、`plugin-submission/test-cases.json` 构成包装阶段的受版本控制输入。
+
+生成本地 Plugin root：
+
+```bash
+python3 tools/build_openai_plugin.py
+python3 tools/build_openai_plugin.py --check
+```
+
+固定输出位于 `.build/plugins/first-principles-thinking/`，只包含 manifest 和 canonical Skill 的 ignored copy。`.build` 不得人工编辑或提交，生成的 `SKILL.md` 也不是第二份事实源。仓库根不再包含 compatibility manifest。
+
+本地 marketplace 位于 `.agents/plugins/marketplace.json`，其 `source.path` 指向上述 generated Plugin root；fresh clone 后必须先运行 build。generated Plugin 已完成本地安装，并通过 exact two-file cache audit；本轮不重装 Plugin，也不修改 Plugin cache。
+
+Skills-only Portal 提交使用 ZIP；ZIP 必须包含 supported Plugin manifest 和至少一个 bundled Skill。Plugin root 可以直接位于 archive root，或位于唯一顶层目录且不得有 sibling files。当前生成目录是未来 ZIP 的 Plugin root，但现阶段不生成 ZIP。Directory submission readiness 为 `NOT ASSESSED`：`interface.logo`、`interface.composerIcon`、Portal metadata、publisher verification、submission ZIP、upload/final scans 和 public directory publication 均尚未完成；skills-only package 的 interface listing URLs 为可选。详细边界见 [OPENAI_PLUGIN.md](OPENAI_PLUGIN.md)。
+
+现有包装已经完成 canonical manifest、deterministic builder、repository/package validation、`plugin-creator` ingestion validation、本地安装、exact two-file cache audit、positive activation、simple-task non-activation 和 privacy audit。
 
 ## 使用方式
 
@@ -112,13 +145,20 @@ skills/first-principles-thinking/
 
 ## 版本与更新
 
-本项目使用语义化版本：
+本项目维护两个独立的语义化版本：
+
+- `VERSION`：Core Skill version；
+- `PLUGIN_VERSION`：OpenAI Plugin wrapper version。
+
+Plugin-only 维护不会强制提升 Core Skill version。Core Skill 更新时，应评估是否需要同步发布新的 Plugin wrapper，以便重新验证打包和平台行为。
+
+Core Skill 版本规则：
 
 - `PATCH`：修复表达、误触发或局部行为；
 - `MINOR`：增加兼容能力或分析维度；
 - `MAJOR`：改变核心流程或产生明显不兼容行为。
 
-GitHub `main` 是唯一公开、稳定、可安装的内容源。tag 和对应的 GitHub Release 是不可变的发布记录。
+GitHub `main` 是唯一公开、稳定、可安装的内容源。Core Skill 的 `vX.Y.Z` tag 和对应 GitHub Release 是不可变的发布记录；Plugin-only release 不创建或复用 Core tag。
 
 Copy 安装是独立副本，不会自动跟随仓库变化。禁止直接修改 `~/.agents/skills/first-principles-thinking`；新版本发布后应主动更新：
 
@@ -134,6 +174,8 @@ npx skills update first-principles-thinking -g
 
 ```bash
 python3 tools/validate_repo.py
+python3 tools/build_openai_plugin.py
+python3 tools/build_openai_plugin.py --check
 ```
 
 验证内容包括：
@@ -142,10 +184,17 @@ python3 tools/validate_repo.py
 - YAML frontmatter 必填字段；
 - 描述与名称长度；
 - `VERSION` 与 Skill metadata 是否一致；
+- `PLUGIN_VERSION` 与 Plugin manifest version 是否一致；
+- canonical Plugin manifest、repo-local marketplace 和 submission golden set 是否有效；
+- generated package 是否只有 allowlist 中的两个普通文件、内容是否最新且没有 symlink；
+- `.build` 是否被 ignore 且没有 tracked 文件，仓库根 manifest 是否保持不存在；
+- source 中是否只有一份 canonical `SKILL.md`；
 - eval JSON 是否有效；
 - 必要维护文件是否存在。
 
-GitHub Actions 会在 push 和 pull request 时自动运行同一检查。
+Validator 分别报告 repository 和 local generated package 状态。fresh clone 在尚未 build 时 repository validation 可以通过；build 后必须同时通过 package `--check`。Directory submission readiness 固定报告 `NOT ASSESSED`，directory assets 和 Portal metadata 留到 Portal submission 阶段评估。
+
+GitHub Actions 会在 fresh checkout 中运行 source validation、两次 clean build、package `--check`、文件清单/SHA/逐字节可重现性比较，并确认构建未改变 tracked source 或 Git status。
 
 ## 反馈与贡献
 

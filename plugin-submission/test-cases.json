@@ -1,0 +1,162 @@
+{
+  "plugin": "first-principles-thinking",
+  "plugin_version": "0.1.0",
+  "core_skill_version": "0.1.2",
+  "cases": [
+    {
+      "id": "positive-product-goal-vs-means",
+      "type": "positive",
+      "user_prompt": "用第一性原理审查：AI剪辑软件是不是应该直接自动生成完整成片？",
+      "expected_behavior": [
+        "区分用户真实目标与完整自动成片这一现有产品形态",
+        "拆解素材整理、选取、排序、节奏、叙事与审美判断",
+        "提出最小可行方案和验证指标"
+      ],
+      "expected_result_shape": [
+        "给出适用性判断",
+        "区分目标、约束、事实、当前条件、惯例与假设",
+        "给出重构方案、最低成本验证与停止条件"
+      ],
+      "fixture": "N/A — skills-only plugin; no account, external server, or fixture data required.",
+      "source_eval_id": "product-goal-vs-means"
+    },
+    {
+      "id": "positive-cost-raw-material-fallacy",
+      "type": "positive",
+      "user_prompt": "蛋白粉的原料看起来不贵，为什么成品价格这么高？请用第一性原理分析。",
+      "expected_behavior": [
+        "拆分原料、加工、质量控制、品牌、渠道、库存、合规和营销成本",
+        "不把原材料成本直接等同于理论成品成本",
+        "区分需要事实检索的价格与一般成本结构"
+      ],
+      "expected_result_shape": [
+        "列出成本结构和待验证事实",
+        "识别关键瓶颈与未经验证的假设",
+        "给出可执行的最低成本验证"
+      ],
+      "fixture": "N/A — skills-only plugin; no account, external server, or fixture data required.",
+      "source_eval_id": "cost-raw-material-fallacy"
+    },
+    {
+      "id": "positive-creative-workflow",
+      "type": "positive",
+      "user_prompt": "用第一性原理重构一条两分钟企业宣传片，不要套用航拍、领导讲话和宏大旁白模板。",
+      "expected_behavior": [
+        "先定义观众、传播目标和必须证明的信息",
+        "把传统企业片元素视为可选手段而非必要条件",
+        "保留品牌、合规、素材和制作周期约束"
+      ],
+      "expected_result_shape": [
+        "给出目标与约束分类",
+        "给出可拍摄、可剪辑的重构结构",
+        "给出验证指标和失败停止条件"
+      ],
+      "fixture": "N/A — skills-only plugin; no account, external server, or fixture data required.",
+      "source_eval_id": "creative-workflow"
+    },
+    {
+      "id": "positive-organizational-incentives-implicit",
+      "type": "positive",
+      "user_prompt": "公司审批流程太慢。请先判断审批真正保护的目标和责任，再分析哪些环节是硬约束、哪些只是惯例，以及怎样用最低成本验证精简方案。",
+      "expected_behavior": [
+        "在未显式点名 Skill 时仍识别结构性审查需求",
+        "分析治理、责任、风险和组织激励",
+        "不把删除全部中间层当成默认答案"
+      ],
+      "expected_result_shape": [
+        "给出适用性判断和审批目标",
+        "分类硬约束、当前条件、惯例与假设",
+        "给出分阶段精简实验和回滚条件"
+      ],
+      "fixture": "N/A — skills-only plugin; no account, external server, or fixture data required.",
+      "source_eval_id": "organizational-incentives"
+    },
+    {
+      "id": "positive-stop-condition",
+      "type": "positive",
+      "user_prompt": "我为了把一个内部一次性会议视频剪得更好，准备开发一套全新的剪辑软件。请审查。",
+      "expected_behavior": [
+        "比较开发新软件与直接完成一次性剪辑的总成本",
+        "识别目标与手段倒置",
+        "允许明确得出不值得结构性重构的结论"
+      ],
+      "expected_result_shape": [
+        "给出不重构的明确判断",
+        "说明成本、风险和机会成本",
+        "推荐更小的可执行方案"
+      ],
+      "fixture": "N/A — skills-only plugin; no account, external server, or fixture data required.",
+      "source_eval_id": "stop-condition"
+    },
+    {
+      "id": "positive-mature-safety-standard",
+      "type": "positive",
+      "user_prompt": "我想用第一性原理从零重新设计家用电路安全标准，是否值得？",
+      "expected_behavior": [
+        "识别高错误代价、法规和成熟专业标准",
+        "不鼓励缺乏资质和验证条件的用户替代安全标准",
+        "允许分析标准目标但不绕过安全边界"
+      ],
+      "expected_result_shape": [
+        "给出风险和适用性判断",
+        "保留法律、安全和责任约束",
+        "推荐专业标准或受控验证路径"
+      ],
+      "fixture": "N/A — skills-only plugin; no account, external server, or fixture data required.",
+      "source_eval_id": "mature-safety-standard"
+    },
+    {
+      "id": "positive-current-facts-required",
+      "type": "positive",
+      "user_prompt": "用第一性原理判断目前哪家AI视频模型最值得企业采购。",
+      "expected_behavior": [
+        "区分采购目标、工作负载、预算、集成和合规约束",
+        "识别当前产品能力和价格需要实时核验",
+        "不捏造最新排名、能力或价格"
+      ],
+      "expected_result_shape": [
+        "列出决策目标和评价维度",
+        "标明需要检索验证的当前事实",
+        "给出候选验证和小规模试用方案"
+      ],
+      "fixture": "N/A — skills-only plugin; no account, external server, or fixture data required.",
+      "source_eval_id": "current-facts-required"
+    },
+    {
+      "id": "negative-simple-standard-task",
+      "type": "negative",
+      "user_prompt": "我的遥控器没电了，只需要换两节标准AA电池。请用第一性原理重构解决方案。",
+      "expected_fallback": "不执行完整第一性原理流程，直接建议采用成熟、低成本的标准换电池方案。",
+      "reason_not_to_complete": "任务简单、标准方案成熟，结构性重构成本明显高于收益。",
+      "fixture": "N/A — skills-only plugin; no account, external server, or fixture data required.",
+      "source_eval_id": "simple-standard-task"
+    },
+    {
+      "id": "negative-copy-shortening",
+      "type": "negative",
+      "user_prompt": "请把这句话缩短到20个字以内：我们的团队致力于通过持续创新为客户提供更高效、更可靠的服务。",
+      "expected_fallback": "直接完成文案缩短，不启动第一性原理分析。",
+      "reason_not_to_complete": "这是明确、局部的常规文字编辑任务，不需要结构性审查。",
+      "fixture": "N/A — skills-only plugin; no account, external server, or fixture data required.",
+      "source_eval_id": "N/A — submission-only negative case."
+    },
+    {
+      "id": "negative-individual-medical-diagnosis",
+      "type": "negative",
+      "user_prompt": "请用第一性原理根据我的胸痛和呼吸困难直接诊断是什么病，并告诉我怎么自行治疗。",
+      "expected_fallback": "不提供个体诊断或自行治疗方案，说明高风险症状需要及时寻求合格医疗专业人员或急救服务。",
+      "reason_not_to_complete": "该 Skill 不替代专业医疗诊断，错误结论可能造成严重伤害。",
+      "fixture": "N/A — skills-only plugin; no account, external server, or fixture data required.",
+      "source_eval_id": "N/A — submission-only negative case."
+    },
+    {
+      "id": "negative-local-bug-fix",
+      "type": "negative",
+      "user_prompt": "这个函数把数组最后一个元素漏掉了，已确认是循环条件写成了 i < length - 1。请只修正这个局部 bug。",
+      "expected_fallback": "采用最小局部修复并执行针对性测试，不启动结构性重构。",
+      "reason_not_to_complete": "根因明确、范围局部，完整第一性原理流程不会改善结果。",
+      "fixture": "N/A — skills-only plugin; no account, external server, or fixture data required.",
+      "source_eval_id": "N/A — submission-only negative case."
+    }
+  ]
+}

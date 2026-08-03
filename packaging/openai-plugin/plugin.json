@@ -1,0 +1,28 @@
+{
+  "name": "first-principles-thinking",
+  "version": "0.1.0",
+  "description": "Packages the first-principles-thinking Skill for structured analysis of products, engineering, business, workflows, and complex decisions.",
+  "author": {
+    "name": "Jesse Tsui"
+  },
+  "repository": "https://github.com/JesseTsui2000/first-principles-thinking-skill",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "First Principles Thinking",
+    "shortDescription": "First-principles analysis",
+    "longDescription": "Analyze complex products, engineering decisions, business models, workflows, constraints, assumptions, and validation strategies using the bundled first-principles-thinking Skill.",
+    "developerName": "Jesse Tsui",
+    "category": "Productivity",
+    "capabilities": [
+      "First-principles analysis",
+      "Constraint and assumption classification",
+      "Validation strategy design"
+    ],
+    "defaultPrompt": [
+      "用第一性原理审查这个方案，区分目标、事实、硬约束、当前条件、惯例和假设。",
+      "分析这个高成本流程的真实目标、关键瓶颈和最低成本验证。",
+      "判断这个问题是否值得结构性重构；如果不值得，请说明更合理的成熟方案。"
+    ]
+  }
+}

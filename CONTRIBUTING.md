@@ -28,6 +28,8 @@
 
 ```bash
 python3 tools/validate_repo.py
+python3 tools/build_openai_plugin.py
+python3 tools/build_openai_plugin.py --check
 git diff --check
 ```
 
@@ -46,6 +48,12 @@ git diff --check
 
 纯文档、validator、CI、安装说明、模板、链接、拼写或元数据维护不要求修改 `evals.json`，也不要求无意义的模型行为对比。PR 中应将 eval ID 和行为对比标记为 `N/A`，说明不涉及 Skill 行为的原因，并提供适当的静态验证、负向测试或文档审查证据。
 
+OpenAI Plugin wrapper、repo-local marketplace 和 submission golden set 属于平台包装层。它们必须引用现有核心 Skill，不得复制指令或扩大触发契约。Plugin submission tests 不得替代或静默修改核心 eval。
+
+Plugin packaging 的受版本控制事实源包括 canonical Core Skill、`packaging/openai-plugin/plugin.json`、两个版本文件和 submission golden set。`.build/plugins/first-principles-thinking/` 是 ignored generated output，不允许人工编辑或提交；其中的 `SKILL.md` 只能由构建流程从 canonical Skill 复制，并必须通过 byte 和 SHA 对比。
+
+Skills-only Portal submission 使用包含 supported Plugin manifest 和至少一个 bundled Skill 的 ZIP。当前 generated directory 是未来 ZIP 的 Plugin root，不是已生成的 ZIP；directory branding assets 和 Portal metadata 完成并通过 preflight 后才能生成提交包。Skills-only interface listing URLs 为可选；不得添加身份、URL、logo 或 listing 占位符来伪造 directory readiness。
+
 ## 修改原则
 
 - 新规则必须对应可复现的问题。
@@ -58,7 +66,15 @@ git diff --check
 
 ## 版本判断
 
-- `PATCH`：文档、validator、eval 修正，或恢复已承诺行为且不扩大触发范围或输出契约。
+`VERSION` 和 `PLUGIN_VERSION` 是独立版本：
+
+- Core Skill 修改按以下规则更新 `VERSION`，并同步 Skill metadata 与 `evals.json` version；
+- Plugin-only 修改只按 wrapper 兼容性更新 `PLUGIN_VERSION` 和 canonical manifest source，不强制提升 Core Skill version；
+- Core Skill 修改时必须评估是否需要同步提升 Plugin version 并重新验证包装。
+
+Core Skill version 等级仅适用于 Core Skill release 或 Combined release；Plugin-only release 的 Core version 判断记录为 `N/A — Core Skill version unchanged.`：
+
+- `PATCH`：Core Skill 文档、validator、eval 修正，或恢复已承诺行为且不扩大触发范围或输出契约。
 - `MINOR`：向后兼容的新分析能力、新维度，或明显扩大但仍兼容的触发或输出能力。
 - `MAJOR`：改变核心七步流程、分类体系、默认行为契约，或产生不兼容的触发或输出变化。
 
@@ -69,6 +85,7 @@ git diff --check
 - 对应 Issue、真实失败案例或维护问题；
 - eval ID；不涉及 Skill 行为时可填写 `N/A` 并说明原因；
 - 基线版本和目标版本；
+- Core Skill version 和 Plugin version；
 - 行为变更的旧版失败、候选版改善和旧新版对比结果，或非行为维护变更的验证证据；
 - 是否改变核心七步流程、触发范围或默认输出契约；
 - PATCH、MINOR 或 MAJOR 的版本建议；
